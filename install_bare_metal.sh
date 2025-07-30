@@ -113,12 +113,21 @@ systemctl enable Shoko-Server || error_exit "Failed to enable service."
 log "Starting Shoko-Server..."
 systemctl start Shoko-Server && log "Service Started" || error_exit "Failed to start service."
 log "Checking Server Status..."
-[ "$(
-    curl -s \
-    -H "Content-Type: application/json" \
-    -H 'Accept: application/json' \
-    'http://localhost:8111/api/v3/Init/Status' \
-     | jq -r '.State')" == "Waiting" ] && log "Server Running" || error_exit "Server Not Running"
+systemctl is-active --quiet Shoko-Server && log "Service is active" || error_exit "Service is not active."
+log "Waiting for Shoko-Server to initialize..."
+sleep 5
+log "Checking Shoko-Server status..."
+{ curl -s \
+  -H "Content-Type: application/json" \
+  -H 'Accept: application/json' \
+  'http://localhost:8111/api/v3/Init/Status' \
+  | jq -e '.State == "Waiting"' >/dev/null \
+    && log "Shoko-Server is running and initialized successfully."; } \
+    || error_exit "Shoko-Server initialization failed or is not in the expected state."
+
+log "Installation complete."
+
+log "Server is running at http://localhost:8111"
 
 log "Cleanup..."
 rm -rf /usr/src/app/source && log "Source directory deleted" || error_exit "Failed to delete source directory in /usr/src/app/source."
