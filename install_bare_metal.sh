@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [ "$EUID" -ne 0 ]; then
+  echo "This script must be run as root."
+  exit 1
+fi
+
 log() { echo -e "\n[INFO] $1"; }
 error_exit() { echo -e "\n[ERROR] $1" >&2; exit 1; }
 
