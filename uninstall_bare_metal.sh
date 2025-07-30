@@ -43,7 +43,7 @@ sed -i '/mediaarea\.net\/repo\/deb\/debian/d' /etc/apt/sources.list
 apt-get update
 
 log "Removing installed packages..."
-apt-get purge -y git mediainfo librhash-dev dotnet-sdk-8.0
+apt-get purge -y mediainfo librhash-dev dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-runtime-8.0
 apt-get autoremove -y
 
 log "Uninstallation complete."

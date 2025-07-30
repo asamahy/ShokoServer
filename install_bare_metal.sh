@@ -18,7 +18,7 @@ log "Install .NET SDK and Runtime..."
 wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 sudo apt-get update
-sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
+sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-runtime-8.0
 
 log "Adding MediaInfo repository..."
 curl --retry 3 -O https://mediaarea.net/repo/deb/debian/pubkey.gpg || error_exit "Failed to download GPG key."
@@ -118,7 +118,7 @@ log "Checking Server Status..."
     -H "Content-Type: application/json" \
     -H 'Accept: application/json' \
     'http://localhost:8111/api/v3/Init/Status' \
-     | jq -r '.State')" = "Started" ] && log "Server Running" || error_exit "Server Not Running"
+     | jq -r '.State')" == "Waiting" ] && log "Server Running" || error_exit "Server Not Running"
 
 log "Cleanup..."
 rm -rf /usr/src/app/source && log "Source directory deleted" || error_exit "Failed to delete source directory in /usr/src/app/source."
