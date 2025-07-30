@@ -89,7 +89,7 @@ chown -R $USER:$GROUP /usr/src/app/build/
 [ -d /root/.shoko ] && error_exit "/root/.shoko exists. Please move it to /home/shoko/.shoko"
 
 log "Creating Systemd service..."
-cat <<EOF > /etc/systemd/system/Shoko-Server.service
+cat <<EOF > /etc/systemd/system/shokoserver.service
 [Unit]
 Description=Shoko Server Service
 After=network.target
@@ -108,22 +108,22 @@ EOF
 
 systemctl daemon-reexec
 systemctl daemon-reload
-systemctl enable Shoko-Server || error_exit "Failed to enable service."
+systemctl enable shokoserver || error_exit "Failed to enable service."
 
-log "Starting Shoko-Server..."
-systemctl start Shoko-Server && log "Service Started" || error_exit "Failed to start service."
+log "Starting shokoserver..."
+systemctl start shokoserver && log "Service Started" || error_exit "Failed to start service."
 log "Checking Server Status..."
-systemctl is-active --quiet Shoko-Server && log "Service is active" || error_exit "Service is not active."
-log "Waiting for Shoko-Server to initialize..."
+systemctl is-active --quiet shokoserver && log "Service is active" || error_exit "Service is not active."
+log "Waiting for shokoserver to initialize..."
 sleep 5
-log "Checking Shoko-Server status..."
+log "Checking shokoserver status..."
 { curl -s \
   -H "Content-Type: application/json" \
   -H 'Accept: application/json' \
   'http://localhost:8111/api/v3/Init/Status' \
   | jq -e '.State == "Waiting"' >/dev/null \
-    && log "Shoko-Server is running and initialized successfully."; } \
-    || error_exit "Shoko-Server initialization failed or is not in the expected state."
+    && log "shokoserver is running and initialized successfully."; } \
+    || error_exit "shokoserver initialization failed or is not in the expected state."
 
 log "Installation complete."
 
