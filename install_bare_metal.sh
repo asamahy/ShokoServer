@@ -16,9 +16,9 @@ apt-get update && apt-get install -y \
     
 log "Install .NET SDK and Runtime..."
 wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt-get update
-sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-runtime-8.0
+dpkg -i packages-microsoft-prod.deb
+apt-get update
+apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-runtime-8.0
 
 log "Adding MediaInfo repository..."
 curl --retry 3 -O https://mediaarea.net/repo/deb/debian/pubkey.gpg || error_exit "Failed to download GPG key."
